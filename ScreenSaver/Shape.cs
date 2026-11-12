@@ -9,16 +9,21 @@ namespace ScreenSaver
         protected int y { get; set; }
         protected int width { get; set; }
         protected int height { get; set; }
-        protected int dx { get; set; } = 3;
-        protected int dy { get; set; } = 3;
+
+        protected int dx { get; set; }
+        protected int dy { get; set; }
+
+        // Shared 4-state array across shapes
         protected Color[] stateColors = new Color[]
         {
-            Color.GhostWhite,
-            Color.SandyBrown,
-            Color.Cyan,
-            Color.HotPink
+            Color.LightSlateGray,
+            Color.RosyBrown,
+            Color.IndianRed,
+            Color.Firebrick
         };
         protected int currentState = 0;
+
+        public bool IsDestroyed = false;
 
         public Shape(int x, int y, int width, int height, int dx, int dy)
         {
@@ -44,79 +49,106 @@ namespace ScreenSaver
         {
         }
 
-        public virtual void Move(Rectangle formBounds)
+        public virtual void Move(Rectangle formBounds, Point cursorPos)
         {
             if (formBounds.Width <= 0 || formBounds.Height <= 0)
             {
                 return;
             }
 
-            this.x += this.dx;
-            this.y += this.dy;
+            x += dx;
+            y += dy;
 
-            bool hitWall = false;
-
-
-            if (this.x < 0) //horizontal bounds
+            // Bounce off left and right walls
+            if (x < 0)
             {
-                this.x = 0;
-                this.dx = Math.Abs(this.dx);
-                hitWall = true;
+                x = 0;
+                dx = -dx;
             }
-            else if (this.x + this.width > formBounds.Width)
+            else if (x + width > formBounds.Width)
             {
-                this.x = Math.Max(0, formBounds.Width - this.width);
-                this.dx = -Math.Abs(this.dx);
-                hitWall = true;
+                x = Math.Max(0, formBounds.Width - width);
+                dx = -dx;
             }
 
-            if (this.y < 0) //verticall bounds
+            // Bounce off top and bottom walls
+            if (y < 0)
             {
-                this.y = 0;
-                this.dy = Math.Abs(this.dy);
-                hitWall = true;
+                y = 0;
+                dy = -dy;
             }
-            else if (this.y + this.height > formBounds.Height)
+            else if (y + height > formBounds.Height)
             {
-                this.y = Math.Max(0, formBounds.Height - this.height);
-                this.dy = -Math.Abs(this.dy);
-                hitWall = true;
-            }
-
-            if (hitWall)
-            {
-                ChangeState();
+                y = Math.Max(0, formBounds.Height - height);
+                dy = -dy;
             }
         }
 
-        public void CheckCollision(Shape other)
+        public virtual void CheckCollision(Shape other)
         {
-            bool isOverlapping =
-                this.x < other.x + other.width &&
-                this.x + this.width > other.x &&
-                this.y < other.y + other.height &&
-                this.y + this.height > other.y;
-
-            if (isOverlapping)
+            if (this.IsDestroyed || other.IsDestroyed)
             {
-                int tempDx = this.dx;
-                int tempDy = this.dy;
-                this.dx = other.dx;
-                this.dy = other.dy;
-                other.dx = tempDx;
-                other.dy = tempDy;
+                return;
+            }
 
+            int overlapLeft = (this.x + this.width) - other.x;
+            int overlapRight = (other.x + other.width) - this.x;
+            int overlapTop = (this.y + this.height) - other.y;
+            int overlapBottom = (other.y + other.height) - this.y;
 
-                this.x += this.dx * 3;
-                this.y += this.dy * 3;
-                other.x += other.dx * 3;
-                other.y += other.dy * 3;
+            if (overlapLeft > 0 && overlapRight > 0 && overlapTop > 0 && overlapBottom > 0)
+            {
+                int minOverlapX = Math.Min(overlapLeft, overlapRight);
+                int minOverlapY = Math.Min(overlapTop, overlapBottom);
 
+                // Push shapes apart so they don't stick together
+                if (minOverlapX < minOverlapY)
+                {
+                    int pushX = (minOverlapX / 2) + 1;
+                    if (overlapLeft < overlapRight)
+                    {
+                        this.x -= pushX;
+                        other.x += pushX;
+                    }
+                    else
+                    {
+                        this.x += pushX;
+                        other.x -= pushX;
+                    }
 
-                this.ChangeState();
-                other.ChangeState();
+                    int tempDx = this.dx;
+                    this.dx = other.dx;
+                    other.dx = tempDx;
+                }
+                else
+                {
+                    int pushY = (minOverlapY / 2) + 1;
+                    if (overlapTop < overlapBottom)
+                    {
+                        this.y -= pushY;
+                        other.y += pushY;
+                    }
+                    else
+                    {
+                        this.y += pushY;
+                        other.y -= pushY;
+                    }
+
+                    int tempDy = this.dy;
+                    this.dy = other.dy;
+                    other.dy = tempDy;
+                }
+
+                // Trigger Stone's state change when hit by a SpinningStar
+                if (this is Stone && other is SpinningStar)
+                {
+                    ((Stone)this).HitByStar();
+                }
+                else if (other is Stone && this is SpinningStar)
+                {
+                    ((Stone)other).HitByStar();
+                }
             }
         }
     }
 }
-
