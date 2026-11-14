@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Drawing;
 using System.Windows.Forms;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace ScreenSaver
 {
@@ -11,7 +12,11 @@ namespace ScreenSaver
         private ArrayList shapes = new ArrayList();
         private Random rng = new Random();
         private int clickCount = 0;
-
+        private Bitmap bgImage;
+        private int bgX = 0;
+        private int bgY = 0;
+        private int bgSpeedX = -1; // Negative moves background left (shapes appear to move right)
+        private int bgSpeedY = -1; // Negative moves background up (shapes appear to move down)
         public Form1()
         {
             InitializeComponent();
@@ -30,8 +35,8 @@ namespace ScreenSaver
         {
             // 1. Set the fixed screen-sized background image from Resources
             Rectangle screenBounds = Screen.PrimaryScreen.Bounds;
-            this.BackgroundImage = new Bitmap(Properties.Resources.background, screenBounds.Width, screenBounds.Height);
-            this.BackgroundImageLayout = ImageLayout.None;
+            bgImage = new Bitmap(Properties.Resources.background, screenBounds.Width, screenBounds.Height);
+
 
             // Start with 1 Stone, 1 GummyBear, 1 RandomRectangle, and 1 SpinningStar
             shapes.Add((Shape)new Stone(220, 180, 2, 2));
@@ -101,6 +106,19 @@ namespace ScreenSaver
 
         private void Form1_Paint(object sender, PaintEventArgs e)
         {
+            // 2. Draw the scrolling background wrapped seamlessly across 4 tiles
+            if (bgImage != null)
+            {
+                int w = bgImage.Width;
+                int h = bgImage.Height;
+
+                e.Graphics.DrawImage(bgImage, bgX, bgY, w, h);
+                e.Graphics.DrawImage(bgImage, bgX + w, bgY, w, h);
+                e.Graphics.DrawImage(bgImage, bgX, bgY + h, w, h);
+                e.Graphics.DrawImage(bgImage, bgX + w, bgY + h, w, h);
+            }
+
+            // 3. Draw all shapes on top of the moving background
             foreach (object obj in shapes)
             {
                 Shape s = (Shape)obj;
@@ -174,6 +192,12 @@ namespace ScreenSaver
                 {
                     shapes.RemoveAt(i);
                 }
+            }
+
+            if (bgImage != null)
+            {
+                bgX = (bgX + bgSpeedX) % bgImage.Width;
+                bgY = (bgY + bgSpeedY) % bgImage.Height;
             }
 
             Invalidate();
