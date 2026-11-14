@@ -106,6 +106,16 @@ namespace ScreenSaver
 
             if (overlapLeft > 0 && overlapRight > 0 && overlapTop > 0 && overlapBottom > 0)
             {
+
+                if (this is SpinningStar || this is Joker)
+                {
+                    this.ChangeState();
+                }
+                if (other is SpinningStar || other is Joker)
+                {
+                    other.ChangeState();
+                }
+
                 int minOverlapX = Math.Min(overlapLeft, overlapRight);
                 int minOverlapY = Math.Min(overlapTop, overlapBottom);
 

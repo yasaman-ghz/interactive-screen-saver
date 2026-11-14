@@ -108,20 +108,14 @@ namespace ScreenSaver
             }
         }
 
-        public override void CheckCollision(Shape other)
+        public override void ChangeState()
         {
-            int oldDx = dx;
-            int oldDy = dy;
-
-            base.CheckCollision(other);
-
-            if (dx != oldDx || dy != oldDy)
+            base.ChangeState();
+            if (jokerButton != null)
             {
-                ChangeState();
                 jokerButton.BackColor = CurrentColor;
             }
-
-            jokerButton.Location = new Point(x, y);
         }
+
     }
 }

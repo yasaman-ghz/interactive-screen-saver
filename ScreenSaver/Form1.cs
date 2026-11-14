@@ -116,16 +116,8 @@ namespace ScreenSaver
             int spawnX = me.X;
             int spawnY = me.Y;
 
-            // Spawn a Stone if none exists on screen
-            //if (!IsStoneOnScreen())
-            //{
-            //    shapes.Add((Shape)new Stone(spawnX, spawnY, 1, 1));
-            //}
-            //else
-            //{
-
                 shapes.Add((Shape)new RandomRectangle(spawnX, spawnY, rng));
-            //}
+           
             if (clickCount % 4 == 0 && clickCount % 6 != 0)
             {
                 shapes.Add((Shape)new Stone(spawnX, spawnY, 1, 1));
@@ -173,8 +165,6 @@ namespace ScreenSaver
                 }
             }
 
-            // 3. Remove destroyed stones
-            // 3. Spawn a Monster if there are 40+ RandomRectangles + SpinningStars
             CheckAndSpawnMonster();
 
             for (int i = shapes.Count - 1; i >= 0; i--)

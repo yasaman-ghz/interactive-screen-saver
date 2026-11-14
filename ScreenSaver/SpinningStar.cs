@@ -23,19 +23,6 @@ namespace ScreenSaver
             angle += 6f;
         }
 
-        public override void CheckCollision(Shape other)
-        {
-            int oldDx = dx;
-            int oldDy = dy;
-
-            base.CheckCollision(other);
-
-            if (dx != oldDx || dy != oldDy)
-            {
-                ChangeState();
-            }
-        }
-
         public override void Draw(Graphics g)
         {
             // 10-point star centered at (0, 0)
