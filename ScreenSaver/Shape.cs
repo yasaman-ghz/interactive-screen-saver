@@ -167,11 +167,11 @@ namespace ScreenSaver
                     ((Stone)other).HitByStar();
                 }
 
-                if (this is Monster && (other is RandomRectangle || other is SpinningStar))
+                if (this is Monster && (other is Smartie || other is SpinningStar))
                 {
                     ((Monster)this).EatShape(other);
                 }
-                else if (other is Monster && (this is RandomRectangle || this is SpinningStar))
+                else if (other is Monster && (this is Smartie || this is SpinningStar))
                 {
                     ((Monster)other).EatShape(this);
                 }

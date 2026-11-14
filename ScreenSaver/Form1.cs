@@ -40,7 +40,7 @@ namespace ScreenSaver
 
             // Start with 1 Stone, 1 GummyBear, 1 RandomRectangle, and 1 SpinningStar
             shapes.Add((Shape)new Stone(220, 180, 2, 2));
-            shapes.Add((Shape)new RandomRectangle(450, 250, rng));
+            shapes.Add((Shape)new Smartie(450, 250, rng));
             shapes.Add((Shape)new SpinningStar(600, 150, -4, 3));
             ReplaceJoker(null);
         }
@@ -70,7 +70,7 @@ namespace ScreenSaver
 
             foreach (object obj in shapes)
             {
-                if (obj is RandomRectangle || obj is SpinningStar)
+                if (obj is Smartie || obj is SpinningStar)
                 {
                     clutterCount++;
                 }
@@ -108,7 +108,7 @@ namespace ScreenSaver
         {
             // 2. Draw the scrolling background wrapped seamlessly across 4 tiles
             if (bgImage != null)
-            {
+            { 
                 int w = bgImage.Width;
                 int h = bgImage.Height;
 
@@ -134,7 +134,7 @@ namespace ScreenSaver
             int spawnX = me.X;
             int spawnY = me.Y;
 
-                shapes.Add((Shape)new RandomRectangle(spawnX, spawnY, rng));
+                shapes.Add((Shape)new Smartie(spawnX, spawnY, rng));
            
             if (clickCount % 4 == 0 && clickCount % 6 != 0)
             {
