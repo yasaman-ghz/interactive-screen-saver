@@ -18,7 +18,7 @@ namespace ScreenSaver
             this.DoubleBuffered = true;
 
             timer = new Timer();
-            timer.Interval = 30;
+            timer.Interval = 10;
             timer.Tick += ScreenTimer_Tick;
             timer.Start();
 
@@ -37,30 +37,38 @@ namespace ScreenSaver
             shapes.Add((Shape)new Stone(220, 180, 2, 2));
             shapes.Add((Shape)new RandomRectangle(450, 250, rng));
             shapes.Add((Shape)new SpinningStar(600, 150, -4, 3));
-            AddNewGummyBear();
+            ReplaceJoker(null);
         }
 
-        public void AddNewGummyBear()
+        internal void ReplaceJoker(Joker oldJoker)
         {
-            int x = rng.Next(50, Math.Max(100, this.ClientSize.Width - 100));
-            int y = rng.Next(50, Math.Max(100, this.ClientSize.Height - 100));
-            int dx = rng.Next(2, 5) * (rng.Next(2) == 0 ? 1 : -1);
-            int dy = rng.Next(2, 5) * (rng.Next(2) == 0 ? 1 : -1);
-
-            shapes.Add((Shape)new GummyBear(this, x, y, dx, dy));
-        }
-
-        private bool IsStoneOnScreen()
-        {
-            foreach (object obj in shapes)
+            // 1. Wipe out the existing Joker if one was clicked
+            if (oldJoker != null)
             {
-                if (obj is Stone)
-                {
-                    return true;
-                }
+                oldJoker.RemoveFromForm();
+                shapes.Remove(oldJoker);
             }
-            return false;
+
+            // 2. Spawn a new Joker in a different random spot
+            int x = rng.Next(50, Math.Max(100, this.ClientSize.Width - 180));
+            int y = rng.Next(50, Math.Max(100, this.ClientSize.Height - 180));
+            int dx = rng.Next(1, 3) * (rng.Next(2) == 0 ? 1 : -1);
+            int dy = rng.Next(1, 3) * (rng.Next(2) == 0 ? 1 : -1);
+
+            shapes.Add((Shape)new Joker(this, x, y, dx, dy));
         }
+
+        //private bool IsStoneOnScreen()
+        //{
+        //    foreach (object obj in shapes)
+        //    {
+        //        if (obj is Stone)
+        //        {
+        //            return true;
+        //        }
+        //    }
+        //    return false;
+        //}
 
         private void Form1_Paint(object sender, PaintEventArgs e)
         {
@@ -80,20 +88,27 @@ namespace ScreenSaver
             int spawnY = me.Y;
 
             // Spawn a Stone if none exists on screen
-            if (!IsStoneOnScreen())
-            {
-                shapes.Add((Shape)new Stone(spawnX, spawnY, 2, 2));
-            }
-            else
-            {
+            //if (!IsStoneOnScreen())
+            //{
+            //    shapes.Add((Shape)new Stone(spawnX, spawnY, 1, 1));
+            //}
+            //else
+            //{
+
                 shapes.Add((Shape)new RandomRectangle(spawnX, spawnY, rng));
+            //}
+            if (clickCount % 4 == 0 && clickCount % 6 != 0)
+            {
+                shapes.Add((Shape)new Stone(spawnX, spawnY, 1, 1));
             }
 
-            // Chance of spawning a SpinningStar every 4 clicks
-            if (clickCount % 4 == 0 && rng.Next(2) == 0)
+            // Chance of spawning a SpinningStar every 6 clicks
+            if (clickCount % 6 == 0 && rng.Next(2) == 0)
             {
-                shapes.Add((Shape)new SpinningStar(spawnX, spawnY, -4, 3));
+                shapes.Add((Shape)new SpinningStar(spawnX, spawnY, 1, 1));
             }
+
+            
         }
 
         private void Form1_Resize(object sender, EventArgs e)

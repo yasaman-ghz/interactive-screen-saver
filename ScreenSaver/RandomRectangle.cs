@@ -11,9 +11,9 @@ namespace ScreenSaver
         private Color rectColor;
 
         public RandomRectangle(int x, int y, Random rng)
-            : base(x, y, rng.Next(40, 141), rng.Next(40, 141),
-                   rng.Next(2, 6) * (rng.Next(2) == 0 ? 1 : -1),
-                   rng.Next(2, 6) * (rng.Next(2) == 0 ? 1 : -1))
+            : base(x, y, rng.Next(30, 50), rng.Next(40, 60),
+                   rng.Next(1, 3) * (rng.Next(2) == 0 ? 1 : -1),
+                   rng.Next(1, 3) * (rng.Next(2) == 0 ? 1 : -1))
         {
             rectColor = Color.FromArgb(rng.Next(80, 240), rng.Next(80, 240), rng.Next(80, 240));
 

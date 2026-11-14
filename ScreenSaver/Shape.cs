@@ -40,6 +40,13 @@ namespace ScreenSaver
             get { return stateColors[currentState]; }
         }
 
+        protected Bitmap LoadTransparentPng(Image resourceImage)
+        {
+            Bitmap bmp = new Bitmap(resourceImage);
+            bmp.MakeTransparent(Color.White);
+            return bmp;
+        }
+
         public virtual void ChangeState()
         {
             currentState = (currentState + 1) % stateColors.Length;

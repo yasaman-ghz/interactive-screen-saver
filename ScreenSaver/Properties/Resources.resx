@@ -133,6 +133,15 @@
   <data name="resting" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\resting.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="small-monster1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\small-monster1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="small-monster2" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\small-monster2.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="small-monster3" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\small-monster3.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="triggered" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\triggered.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>

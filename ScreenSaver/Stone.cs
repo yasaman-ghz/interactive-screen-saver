@@ -7,8 +7,10 @@ namespace ScreenSaver
     internal class Stone : Shape
     {
         private int hitCooldown = 0;
+        private Bitmap[] faceImages;
+        private float angle = 0f;
 
-        public Stone(int x, int y, int dx, int dy) : base(x, y, 100, 100, dx, dy)
+        public Stone(int x, int y, int dx, int dy) : base(x, y, 170, 170, dx, dy)
         {
             stateColors = new Color[]
             {
@@ -16,6 +18,26 @@ namespace ScreenSaver
                 Color.RosyBrown,      // State 1: Bothered
                 Color.IndianRed,      // State 2: Triggered
                 Color.Firebrick       // State 3: Angry
+            };
+
+            Bitmap restingBmp = new Bitmap(Properties.Resources.resting);
+            restingBmp.MakeTransparent(Color.White);
+
+            Bitmap botheredBmp = new Bitmap(Properties.Resources.bothered);
+            botheredBmp.MakeTransparent(Color.White);
+
+            Bitmap triggeredBmp = new Bitmap(Properties.Resources.triggered);
+            triggeredBmp.MakeTransparent(Color.White);
+
+            Bitmap angryBmp = new Bitmap(Properties.Resources.angry);
+            angryBmp.MakeTransparent(Color.White);
+
+            faceImages = new Bitmap[]
+            {
+                restingBmp,
+                botheredBmp,
+                triggeredBmp,
+                angryBmp
             };
         }
 
@@ -27,6 +49,7 @@ namespace ScreenSaver
             }
 
             base.Move(formBounds, cursorPos);
+            angle = (angle + 2f) % 360f;
         }
 
         public void HitByStar()
@@ -57,6 +80,14 @@ namespace ScreenSaver
                 return;
             }
 
+            // Shift origin to the stone's center and rotate
+            g.TranslateTransform(x + width / 2f, y + height / 2f);
+            g.RotateTransform(angle);
+
+            // Local top-left corner relative to the center (0, 0)
+            int left = -width / 2;
+            int top = -height / 2;
+
             using (SolidBrush brush = new SolidBrush(CurrentColor))
             {
                 if (currentState == 0)
@@ -64,73 +95,71 @@ namespace ScreenSaver
                     // State 0: Smooth, almost round stone
                     Point[] points = new Point[]
                     {
-                        new Point(x + width / 4, y),
-                        new Point(x + width * 3 / 4, y),
-                        new Point(x + width, y + height / 2),
-                        new Point(x + width * 3 / 4, y + height),
-                        new Point(x + width / 4, y + height),
-                        new Point(x, y + height / 2)
+                        new Point(left + width / 4, top),
+                        new Point(left + width * 3 / 4, top),
+                        new Point(left + width, top + height / 2),
+                        new Point(left + width * 3 / 4, top + height),
+                        new Point(left + width / 4, top + height),
+                        new Point(left, top + height / 2)
                     };
-                    g.FillClosedCurve(brush, points, FillMode.Winding, 0.5f);
+                    g.FillClosedCurve(brush, points, FillMode.Winding, 0.4f);
                 }
                 else if (currentState == 1)
                 {
                     // State 1: Slightly rougher surface
                     Point[] points = new Point[]
                     {
-                        new Point(x + width / 4, y),
-                        new Point(x + width * 3 / 4, y + 10),
-                        new Point(x + width, y + height / 2),
-                        new Point(x + width * 3 / 4, y + height),
-                        new Point(x + width / 5, y + height - 8),
-                        new Point(x, y + height / 3)
+                        new Point(left + width / 4, top),
+                        new Point(left + width * 3 / 4, top + 6),
+                        new Point(left + width, top + height / 2),
+                        new Point(left + width * 3 / 4, top + height),
+                        new Point(left + width / 5, top + height - 4),
+                        new Point(left, top + height / 3)
                     };
-                    g.FillClosedCurve(brush, points, FillMode.Winding, 0.2f);
+                    g.FillClosedCurve(brush, points, FillMode.Winding, 0.4f);
                 }
                 else if (currentState == 2)
                 {
                     // State 2: Rougher polygon with prominent edges
                     Point[] points = new Point[]
                     {
-                        new Point(x + width / 3, y),
-                        new Point(x + width / 2, y + 15),
-                        new Point(x + width * 4 / 5, y),
-                        new Point(x + width, y + height / 2),
-                        new Point(x + width * 3 / 4, y + height),
-                        new Point(x + width / 4, y + height - 10),
-                        new Point(x, y + height / 2)
+                        new Point(left + width / 3, top),
+                        new Point(left + width / 2, top + 15),
+                        new Point(left + width * 4 / 5, top),
+                        new Point(left + width, top + height / 2),
+                        new Point(left + width * 3 / 4, top + height),
+                        new Point(left + width / 4, top + height - 10),
+                        new Point(left, top + height / 2)
                     };
-                    g.FillPolygon(brush, points);
+                    g.FillClosedCurve(brush, points, FillMode.Winding, 0.4f);
                 }
                 else
                 {
                     // State 3: Biggest and spikiest stone
                     Point[] points = new Point[]
                     {
-                        new Point(x + width / 4, y),
-                        new Point(x + width / 2, y + 20),
-                        new Point(x + width * 3 / 4, y),
-                        new Point(x + width, y + height / 3),
-                        new Point(x + width - 18, y + height / 2),
-                        new Point(x + width, y + height * 3 / 4),
-                        new Point(x + width / 2, y + height),
-                        new Point(x + width / 4, y + height - 15),
-                        new Point(x, y + height * 2 / 3),
-                        new Point(x + 15, y + height / 3)
+                        new Point(left + width / 4, top),
+                        new Point(left + width / 2, top + 20),
+                        new Point(left + width * 3 / 4, top),
+                        new Point(left + width, top + height / 3),
+                        new Point(left + width - 18, top + height / 2),
+                        new Point(left + width, top + height * 3 / 4),
+                        new Point(left + width / 2, top + height),
+                        new Point(left + width / 4, top + height - 15),
+                        new Point(left, top + height * 2 / 3),
+                        new Point(left + 15, top + height / 3)
                     };
-                    g.FillPolygon(brush, points);
+                    g.FillClosedCurve(brush, points, FillMode.Winding, 0.4f);
                 }
             }
 
-            // Draw the PNG face centered inside the stone
-            Image faceImg = Properties.Resources.resting;
-            if (currentState == 1) faceImg = Properties.Resources.bothered;
-            if (currentState == 2) faceImg = Properties.Resources.triggered;
-            if (currentState == 3) faceImg = Properties.Resources.angry;
+            // Draw the PNG face centered around (0, 0) so it spins with the stone
+            int faceW = (int)(width / 1.5);
+            int faceH = (int)(height / 1.5);
+            g.DrawImage(faceImages[currentState], -faceW / 2, -faceH / 2, faceW, faceH);
 
-            int faceW = width / 2;
-            int faceH = height / 2;
-            g.DrawImage(faceImg, x + (width - faceW) / 2, y + (height - faceH) / 2, faceW, faceH);
+            // Reset the transform so other shapes draw normally
+            g.ResetTransform();
         }
     }
 }
