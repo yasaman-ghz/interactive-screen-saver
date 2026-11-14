@@ -7,7 +7,7 @@ namespace ScreenSaver
 {
     public partial class Form1 : Form
     {
-        private Timer timer;
+        private System.Windows.Forms.Timer timer;
         private ArrayList shapes = new ArrayList();
         private Random rng = new Random();
         private int clickCount = 0;
@@ -17,7 +17,7 @@ namespace ScreenSaver
             InitializeComponent();
             this.DoubleBuffered = true;
 
-            timer = new Timer();
+            timer = new System.Windows.Forms.Timer();
             timer.Interval = 10;
             timer.Tick += ScreenTimer_Tick;
             timer.Start();
@@ -56,6 +56,35 @@ namespace ScreenSaver
             int dy = rng.Next(1, 3) * (rng.Next(2) == 0 ? 1 : -1);
 
             shapes.Add((Shape)new Joker(this, x, y, dx, dy));
+        }
+
+        private void CheckAndSpawnMonster()
+        {
+            int clutterCount = 0;
+            bool monsterExists = false;
+
+            foreach (object obj in shapes)
+            {
+                if (obj is RandomRectangle || obj is SpinningStar)
+                {
+                    clutterCount++;
+                }
+                else if (obj is Monster && !((Monster)obj).IsDestroyed)
+                {
+                    monsterExists = true;
+                }
+            }
+
+            // Spawn 1 Monster when there are 40+ RandomRectangles + SpinningStars on screen
+            if (clutterCount >= 40 && !monsterExists)
+            {
+                int x = rng.Next(50, Math.Max(100, this.ClientSize.Width - 150));
+                int y = rng.Next(50, Math.Max(100, this.ClientSize.Height - 150));
+                int dx = rng.Next(3, 6) * (rng.Next(2) == 0 ? 1 : -1);
+                int dy = rng.Next(3, 6) * (rng.Next(2) == 0 ? 1 : -1);
+
+                shapes.Add((Shape)new Monster(x, y, dx, dy));
+            }
         }
 
         //private bool IsStoneOnScreen()
@@ -145,6 +174,9 @@ namespace ScreenSaver
             }
 
             // 3. Remove destroyed stones
+            // 3. Spawn a Monster if there are 40+ RandomRectangles + SpinningStars
+            CheckAndSpawnMonster();
+
             for (int i = shapes.Count - 1; i >= 0; i--)
             {
                 Shape s = (Shape)shapes[i];

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.Threading;
 
 namespace ScreenSaver
 {
@@ -154,6 +155,15 @@ namespace ScreenSaver
                 else if (other is Stone && this is SpinningStar)
                 {
                     ((Stone)other).HitByStar();
+                }
+
+                if (this is Monster && (other is RandomRectangle || other is SpinningStar))
+                {
+                    ((Monster)this).EatShape(other);
+                }
+                else if (other is Monster && (this is RandomRectangle || this is SpinningStar))
+                {
+                    ((Monster)other).EatShape(this);
                 }
             }
         }
