@@ -1,6 +1,4 @@
 <Solution>
-  <Folder Name="/Solution Items/">
-    <File Path="Monster.cs" />
-  </Folder>
+  <Folder Name="/Solution Items/" />
   <Project Path="ScreenSaver/ScreenSaver.csproj" Id="231fdfcd-2cfb-4cf6-b13f-31b3a8069b56" />
 </Solution>

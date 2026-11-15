@@ -35,10 +35,19 @@ namespace ScreenSaver
 
             stateColors = new Color[]
             {
-                Color.MediumPurple,
+                Color.YellowGreen,
                 Color.Crimson,
+                Color.Turquoise,
                 Color.Teal,
-                Color.Gold
+                Color.Gold,
+                Color.LimeGreen,
+                Color.DarkOrange,
+                Color.LawnGreen,
+                Color.GreenYellow,
+                Color.Green,
+                Color.MediumSeaGreen,
+                Color.OrangeRed,
+                Color.Firebrick
             };
 
             // Pick one of 3 Joker PNGs (0, 1, or 2)

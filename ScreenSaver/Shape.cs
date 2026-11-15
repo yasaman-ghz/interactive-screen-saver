@@ -15,13 +15,8 @@ namespace ScreenSaver
         protected int dy { get; set; }
 
         // Shared 4-state array across shapes
-        protected Color[] stateColors = new Color[]
-        {
-            Color.LightSlateGray,
-            Color.RosyBrown,
-            Color.IndianRed,
-            Color.Firebrick
-        };
+        protected Color[] stateColors = new Color[] { };
+       
         protected int currentState = 0;
 
         public bool IsDestroyed = false;

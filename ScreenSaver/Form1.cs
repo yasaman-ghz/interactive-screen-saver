@@ -80,8 +80,8 @@ namespace ScreenSaver
                 }
             }
 
-            // Spawn 1 Monster when there are 40+ RandomRectangles + SpinningStars on screen
-            if (clutterCount >= 40 && !monsterExists)
+            // Spawn 1 Monster when there are 60+ RandomRectangles + SpinningStars on screen
+            if (clutterCount >= 60 && !monsterExists)
             {
                 int x = rng.Next(50, Math.Max(100, this.ClientSize.Width - 150));
                 int y = rng.Next(50, Math.Max(100, this.ClientSize.Height - 150));
@@ -91,18 +91,6 @@ namespace ScreenSaver
                 shapes.Add((Shape)new Monster(x, y, dx, dy));
             }
         }
-
-        //private bool IsStoneOnScreen()
-        //{
-        //    foreach (object obj in shapes)
-        //    {
-        //        if (obj is Stone)
-        //        {
-        //            return true;
-        //        }
-        //    }
-        //    return false;
-        //}
 
         private void Form1_Paint(object sender, PaintEventArgs e)
         {
@@ -136,15 +124,15 @@ namespace ScreenSaver
 
                 shapes.Add((Shape)new Smartie(spawnX, spawnY, rng));
            
-            if (clickCount % 4 == 0 && clickCount % 6 != 0)
+            if (clickCount % 8 == 0 && clickCount % 6 != 0)
             {
-                shapes.Add((Shape)new Stone(spawnX, spawnY, 1, 1));
+                shapes.Add((Shape)new Stone(spawnX, spawnY, 3, 3));
             }
 
             // Chance of spawning a SpinningStar every 6 clicks
             if (clickCount % 6 == 0 && rng.Next(2) == 0)
             {
-                shapes.Add((Shape)new SpinningStar(spawnX, spawnY, 1, 1));
+                shapes.Add((Shape)new SpinningStar(spawnX, spawnY, 20, 20));
             }
 
             
@@ -165,14 +153,13 @@ namespace ScreenSaver
         {
             Point cursorPos = this.PointToClient(Cursor.Position);
 
-            // 1. Move all shapes
+          
             for (int i = 0; i < shapes.Count; i++)
             {
                 Shape s = (Shape)shapes[i];
                 s.Move(this.ClientRectangle, cursorPos);
             }
 
-            // 2. Check collisions
             for (int i = 0; i < shapes.Count; i++)
             {
                 for (int j = i + 1; j < shapes.Count; j++)

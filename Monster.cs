@@ -10,7 +10,7 @@ namespace ScreenSaver
         private Bitmap monsterImg;
         private float angle = 0f;
 
-        public Monster(int x, int y, int dx, int dy) : base(x, y, 130, 130, dx, dy)
+        public Monster(int x, int y, int dx, int dy) : base(x, y, 500, 500, dx, dy)
         {
             stateColors = new Color[]
             {
@@ -85,7 +85,7 @@ namespace ScreenSaver
 
             using (SolidBrush brush = new SolidBrush(CurrentColor))
             {
-                g.FillPolygon(brush, spikes);
+                g.FillClosedCurve(brush, spikes, FillMode.Winding, 0.4f);
             }
 
             // Draw the Monster PNG centered inside

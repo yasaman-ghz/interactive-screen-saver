@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.Reflection;
 
 namespace ScreenSaver
 {
@@ -10,21 +11,26 @@ namespace ScreenSaver
         private Bitmap monsterImg;
         private float angle = 0f;
 
-        public Monster(int x, int y, int dx, int dy) : base(x, y, 130, 130, dx, dy)
-        {
-            stateColors = new Color[]
-            {
-                Color.DarkViolet,
-                Color.Indigo,
-                Color.Purple,
-                Color.MediumOrchid
-            };
+        private Bitmap[] stateFaces;
 
-            // Optional: Load your Monster PNG from Resources and strip white background
-            monsterImg = new Bitmap(Properties.Resources.angry);
-            monsterImg.MakeTransparent(Color.White);
+        public Monster(int x, int y, int dx, int dy) : base(x, y, 300, 300, dx, dy)
+        {
+            stateFaces = new Bitmap[]
+            {
+                Properties.Resources.bothered,
+                Properties.Resources.triggered
+            };
         }
 
+        public override void ChangeState()
+        {
+            currentState = (currentState + 1) % stateFaces.Length;
+            if (currentState < stateFaces.Length)
+            {
+                monsterImg = stateFaces[currentState];
+                monsterImg.MakeTransparent(Color.White);
+            }
+        }
         public override void Move(Rectangle formBounds, Point cursorPos)
         {
             base.Move(formBounds, cursorPos);
@@ -45,8 +51,8 @@ namespace ScreenSaver
             // Cycle monster's 4 state colors as it eats
             ChangeState();
 
-            // Disappear after 15 collisions
-            if (eatenCount >= 15)
+            // Disappear after 30 collisions
+            if (eatenCount >= 30)
             {
                 IsDestroyed = true;
             }
@@ -69,23 +75,23 @@ namespace ScreenSaver
             // Draw a jagged, spiky monster aura behind the PNG
             Point[] spikes = new Point[]
             {
-                new Point(left + width / 2, top),
-                new Point(left + width * 3 / 4, top + 15),
-                new Point(left + width, top + height / 4),
-                new Point(left + width - 15, top + height / 2),
-                new Point(left + width, top + height * 3 / 4),
-                new Point(left + width * 3 / 4, top + height - 15),
-                new Point(left + width / 2, top + height),
-                new Point(left + width / 4, top + height - 15),
-                new Point(left, top + height * 3 / 4),
-                new Point(left + 15, top + height / 2),
-                new Point(left, top + height / 4),
-                new Point(left + width / 4, top + 15)
+                new Point(left + width / 2, top),                   // Top outer bump
+                new Point(left + width * 3 / 4, top + 12),          // Top-right gentle dip
+                new Point(left + width - 6, top + height / 4),      // Upper-right bump
+                new Point(left + width + 10, top + height / 2),     // Middle-right gentle dip
+                new Point(left + width - 6, top + height * 3 / 4),  // Lower-right bump
+                new Point(left + width * 3 / 4, top + height - 12), // Bottom-right gentle dip
+                new Point(left + width / 2, top + height),          // Bottom outer bump
+                new Point(left + width / 4, top + height - 12),     // Bottom-left gentle dip
+                new Point(left + 6, top + height * 3 / 4),          // Lower-left bump
+                new Point(left - 10, top + height / 2),             // Middle-left gentle dip
+                new Point(left + 6, top + height / 4),              // Upper-left bump
+                new Point(left + width / 4, top + 12)               // Top-left gentle dip
             };
 
-            using (SolidBrush brush = new SolidBrush(CurrentColor))
+            using (SolidBrush brush = new SolidBrush(Color.LemonChiffon))
             {
-                g.FillPolygon(brush, spikes);
+                g.FillClosedCurve(brush, spikes, FillMode.Winding, 0.4f);
             }
 
             // Draw the Monster PNG centered inside

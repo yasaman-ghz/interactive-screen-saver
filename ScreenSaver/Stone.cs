@@ -14,10 +14,10 @@ namespace ScreenSaver
         {
             stateColors = new Color[]
             {
-                Color.LightSlateGray, // State 0: Sleeping
-                Color.RosyBrown,      // State 1: Bothered
-                Color.IndianRed,      // State 2: Triggered
-                Color.Firebrick       // State 3: Angry
+                Color.MediumPurple, // State 0: Sleeping
+                Color.BlueViolet,      // State 1: Bothered
+                Color.MediumVioletRed,      // State 2: Triggered
+                Color.DeepPink       // State 3: Angry
             };
 
             Bitmap restingBmp = new Bitmap(Properties.Resources.resting);
@@ -92,7 +92,7 @@ namespace ScreenSaver
             {
                 if (currentState == 0)
                 {
-                    // State 0: Smooth, almost round stone
+                 
                     Point[] points = new Point[]
                     {
                         new Point(left + width / 4, top),
@@ -106,7 +106,7 @@ namespace ScreenSaver
                 }
                 else if (currentState == 1)
                 {
-                    // State 1: Slightly rougher surface
+
                     Point[] points = new Point[]
                     {
                         new Point(left + width / 4, top),
@@ -120,7 +120,7 @@ namespace ScreenSaver
                 }
                 else if (currentState == 2)
                 {
-                    // State 2: Rougher polygon with prominent edges
+                   
                     Point[] points = new Point[]
                     {
                         new Point(left + width / 3, top),
@@ -135,7 +135,7 @@ namespace ScreenSaver
                 }
                 else
                 {
-                    // State 3: Biggest and spikiest stone
+                 
                     Point[] points = new Point[]
                     {
                         new Point(left + width / 4, top),
@@ -154,8 +154,8 @@ namespace ScreenSaver
             }
 
             // Draw the PNG face centered around (0, 0) so it spins with the stone
-            int faceW = (int)(width / 1.5);
-            int faceH = (int)(height / 1.5);
+            int faceW = (int)(width/1.2);
+            int faceH = (int)(height/1.2);
             g.DrawImage(faceImages[currentState], -faceW / 2, -faceH / 2, faceW, faceH);
 
             // Reset the transform so other shapes draw normally
