@@ -17,8 +17,8 @@ namespace ScreenSaver
         {
             stateFaces = new Bitmap[]
             {
-                Properties.Resources.bothered,
-                Properties.Resources.triggered
+                Properties.Resources.monster1,
+                Properties.Resources.monster2
             };
         }
 

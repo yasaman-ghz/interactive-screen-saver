@@ -52,9 +52,9 @@ namespace ScreenSaver
 
             // Pick one of 3 Joker PNGs (0, 1, or 2)
             int pngChoice = rng.Next(3);
-            Image chosenResource = Properties.Resources.small_monster1;
-            if (pngChoice == 1) chosenResource = Properties.Resources.small_monster2;
-            if (pngChoice == 2) chosenResource = Properties.Resources.small_monster3;
+            Image chosenResource = Properties.Resources.joker1;
+            if (pngChoice == 1) chosenResource = Properties.Resources.joker2;
+            if (pngChoice == 2) chosenResource = Properties.Resources.joker3;
 
             jokerImg = new Bitmap(chosenResource);
             jokerImg.MakeTransparent(Color.White);
